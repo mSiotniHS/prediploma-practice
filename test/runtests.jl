@@ -1,17 +1,15 @@
 using DrWatson, Test
 @quickactivate "vkr"
 
-# Here you include files using `srcdir`
-# include(srcdir("file.jl"))
+include(srcdir("vkr.jl"))
 
-# Run test suite
-println("Starting tests")
-ti = time()
+@testset "mutation tests" begin
+    expected = [1, 0, 0, 1, 1]
+    actual = VKR.multipoint_core_operation(
+        [1, 1, 1, 1, 1],
+        [0, 0, 0, 0, 0],
+        [1, 3]
+    )
 
-@testset "vkr tests" begin
-    @test 1 == 1
+    @test expected == actual
 end
-
-ti = time() - ti
-println("\nTest took total time of:")
-println(round(ti/60, digits = 3), " minutes")
