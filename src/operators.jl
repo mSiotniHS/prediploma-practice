@@ -116,7 +116,12 @@ fix_coloring(graph) = coloring -> begin
     fixed_coloring = copy(coloring)
 
     while true
-        maybe_problematic_vertex = most_problematic_vertex(graph, fixed_coloring)
+        problematic_vertex = most_problematic_vertex(graph, fixed_coloring)
+        if isnothing(problematic_vertex)
+            break
+        end
+
+        fixed_coloring[problematic_vertex] = smallest_color(graph, problematic_vertex, fixed_coloring)
     end
 
     fixed_coloring
@@ -135,13 +140,12 @@ function most_problematic_vertex(graph, coloring)
         end
     end
 
-    foldl(
-        Filter(edge -> coloring[Graphs.src(edge)] == coloring[Graphs.dst(edge)]),
-        Graphs.edges(graph);
-        init=...
-    ) do ...
-        ...
+    problematic_vertex = dict_key_by_max_value(problem_table)
+    if problem_table[problematic_vertex] == 0
+        nothing
     end
+
+    problematic_vertex
 end
 
 function report_problem!(problem_table, vertex)
@@ -150,6 +154,19 @@ function report_problem!(problem_table, vertex)
     end
 
     problem_table[vertex] += 1
+end
+
+function dict_key_by_max_value(dict)
+    minkey, minvalue = next(dict, start(dict))[1]
+
+    for (key, value) in dict
+        if value < minvalue
+            minkey = key
+            minvalue = value
+        end
+    end
+
+    minkey
 end
 
 ### end MODIFICATION FRAMEWORK
