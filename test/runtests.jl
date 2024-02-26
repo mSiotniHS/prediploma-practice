@@ -5,7 +5,7 @@ include(srcdir("vkr.jl"))
 
 @testset "mutation tests" begin
     expected = [1, 0, 0, 1, 1]
-    actual = VKR.multipoint_core_operation(
+    actual = multipoint_core_operation(
         [1, 1, 1, 1, 1],
         [0, 0, 0, 0, 0],
         [1, 3]
