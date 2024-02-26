@@ -96,10 +96,7 @@ end
 
 ### MATCHMAKING
 
-function random_matchmaking(population)
-    intendeds = Random.shuffle(population)
-    collect(Iterators.partition(intendeds, 2))
-end
+random_matchmaking(population) = Random.shuffle(population) |> Consecutive(2) |> collect
 
 ### end MATCHMAKING
 

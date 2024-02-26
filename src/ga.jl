@@ -81,4 +81,4 @@ end
 
 get_best = minimum
 
-population_generator(generator) = count -> map(1:count, _ -> generator())
+population_generator(generator) = (count) -> 1:count |> Map(_ -> generator()) |> tcollect
