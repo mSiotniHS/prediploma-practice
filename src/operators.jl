@@ -112,19 +112,22 @@ generation_count_evaluator(max_count::Int) = (state::GaManagerState) -> state.ge
 
 modified_operator(modifier, operator) = modifier ∘ operator
 
-fix_coloring(graph) = coloring -> begin
-    fixed_coloring = copy(coloring)
+function fix_coloring(graph::Graphs.AbstractGraph)
+    fixer! = fix_coloring!(graph)
+    coloring -> fixer!(copy(coloring))
+end
 
+fix_coloring!(graph::Graphs.AbstractGraph) = coloring -> begin
     while true
-        problematic_vertex = most_problematic_vertex(graph, fixed_coloring)
+        problematic_vertex = most_problematic_vertex(graph, coloring)
         if isnothing(problematic_vertex)
             break
         end
 
-        fixed_coloring[problematic_vertex] = smallest_color(graph, problematic_vertex, fixed_coloring)
+        coloring[problematic_vertex] = smallest_color(graph, problematic_vertex, coloring)
     end
 
-    fixed_coloring
+    coloring
 end
 
 function most_problematic_vertex(graph::Graphs.AbstractGraph, coloring)
