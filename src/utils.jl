@@ -3,3 +3,5 @@ roulette(items::AbstractVector, weights::Vector{<:Real}) =
 
 roulette_idx(weights::Vector{<:Real}) =
     StatsBase.sample(default_rng(), StatsBase.Weights(weights))
+
+get_best = argmin
