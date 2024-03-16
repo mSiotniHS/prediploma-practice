@@ -66,24 +66,24 @@ function randomized_lf_ordering(graph)
     ordering
 end
 
-function randomized_sl_ordering(graph)
-    vertices = Graphs.vertices(graph)
-    ordering = Vector{Int}
+# function randomized_sl_ordering(graph)
+#     vertices = Graphs.vertices(graph)
+#     ordering = Vector{Int}
 
-    while length(ordering) != length(vertices)
-        weights = vertices |>
-            Map(vertex -> Graphs.degree(graph, vertex)) |>  # WRONG! GRAPH SHOULD BE WITHOUT ALREADY ADDED VERTICES
-            Map(inv) |>
-            tcollect
+#     while length(ordering) != length(vertices)
+#         weights = vertices |>
+#             Map(vertex -> Graphs.degree(graph, vertex)) |>  # WRONG! GRAPH SHOULD BE WITHOUT ALREADY ADDED VERTICES
+#             Map(inv) |>
+#             tcollect
 
-        idx = roulette_idx(weights)
-        push!(ordering, vertices[idx])
+#         idx = roulette_idx(weights)
+#         push!(ordering, vertices[idx])
 
-        deleteat!(vertices, idx)
-    end
+#         deleteat!(vertices, idx)
+#     end
 
-    reverse!(ordering)
-    ordering
-end
+#     reverse!(ordering)
+#     ordering
+# end
 
 ### end POPULATION GENERATORS
