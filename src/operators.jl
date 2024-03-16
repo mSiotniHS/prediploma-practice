@@ -8,7 +8,7 @@ function multipoint(point_count::Int)
         child1 = multipoint_core_operation(parent1, parent2, points)
         child2 = multipoint_core_operation(parent2, parent1, points)
 
-        (child1, child2)
+        child1, child2
     end
 end
 
