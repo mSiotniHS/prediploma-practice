@@ -77,7 +77,7 @@ function β_tournament(β::Int)
         parameters = manager.iteration_settings.parameters
         to_replace_count = round(UInt32, parameters.population_size * parameters.generational_overlap_ratio)
 
-        newcomers = Vector{Genotype}
+        newcomers = Genotype[]
 
         for _ in 1:to_replace_count
             contestants = StatsBase.sample(reproduction_set, β, replace=false)
