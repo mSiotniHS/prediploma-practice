@@ -34,6 +34,34 @@ function multipoint_core_operation(parent1::Genotype, parent2::Genotype, points:
     child
 end
 
+spx = multipoint(1)
+
+function shuffle(parent1::Genotype, parent2::Genotype; rng::AbstractRNG=default_rng())
+    permutation = randperm(rng, length(parent1))
+    tmp1, tmp2 = spx(view(parent1, permutation), view(parent2, permutation))
+
+    child1, child2 = similar(tmp1), similar(tmp2)
+    for (i, j) in enumerate(permutation)
+        child1[j] = tmp1[i]
+        child2[j] = tmp2[i]
+    end
+
+    child1, child2
+end
+
+function uniform(parent1::Genotype, parent2::Genotype; rng::AbstractRNG=default_rng())
+    child1, child2 = copy(parent1), copy(parent2)
+    choice_table = rand(rng, Bool, length(parent1))
+
+    for i in 1:genotype_length
+        if choice_table[i]
+            vswap!(child1, child2, i)
+        end
+    end
+
+    child1, child2
+end
+
 ### end CROSSOVERS
 
 
