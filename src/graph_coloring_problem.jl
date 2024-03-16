@@ -50,8 +50,8 @@ function smallest_color(graph, vertex, coloring)
 
     color = 0
 
-    for neighbour_color in 1:eachindex(neighbour_colors)
-        if color != neighbour_color break end
+    for i in eachindex(neighbour_colors)
+        if color != neighbour_colors[i] break end
         color += 1
     end
 
