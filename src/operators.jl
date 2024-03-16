@@ -80,15 +80,19 @@ function β_tournament(β::Int)
         newcomers = Genotype[]
 
         for _ in 1:to_replace_count
-            contestants = StatsBase.sample(reproduction_set, β, replace=false)
-            winner = get_best(manager.fitness_function, contestants)
-
-            push!(newcomers, winner)
-            deleteat!(reproduction_set, findall(x -> x == winner, reproduction_set))
+            contestant_idxs = StatsBase.sample(1:length(reproduction_set), β, replace=false)
+            run_tournament!(reproduction_set, newcomers, contestant_idxs, manager.fitness_function)
         end
 
         newcomers
     end
+end
+
+function run_tournament!(reproduction_set::Population, newcomers::Population, contestant_idxs, fitness_function)
+    winner_idx = get_best(x -> fitness_function(reproduction_set[x]), contestant_idxs)
+
+    push!(newcomers, reproduction_set[winner_idx])
+    deleteat!(reproduction_set, winner_idx)
 end
 
 ### end SELECTIONS
