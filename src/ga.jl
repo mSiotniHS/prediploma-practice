@@ -17,13 +17,13 @@ struct GaSettings
     parameters::GaParameters
 end
 
-const Genotype = Vector{UInt16}
-const Population = AbstractVector{Genotype}
+const Genotype = Vector{Int}
+const Population = Vector{Genotype}
 
-struct GaManager
+struct GaManager{T1, T2}
     iteration_settings::GaSettings
-    fitness_function
-    work_evaluator
+    fitness_function::T1
+    work_evaluator::T2
 end
 
 mutable struct GaManagerState
