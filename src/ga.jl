@@ -59,7 +59,11 @@ function run_iteration!(population::Population, manager::GaManager)
 
     mutants = mutate(children, manager.iteration_settings)
 
-    reproduction_set = [children; mutants]
+    reproduction_set = if isempty(mutants)
+        children
+    else
+        [children; mutants]
+    end
 
     perform_selection!(population, reproduction_set, manager)
 end
