@@ -13,7 +13,7 @@ function multipoint(point_count::Int)
 end
 
 function multipoint_core_operation(parent1::Genotype, parent2::Genotype, points::Vector{Int})
-    child = zeros(eltype(parent1), length(parent1))
+    child = similar(parent1)
     take_seconds_genes = false
     point_idx = 1
 
