@@ -1,7 +1,7 @@
 ### CROSSOVERS
 
-function multipoint(point_count)
-    (parent1, parent2) -> begin
+function multipoint(point_count::Int)
+    (parent1::Genotype, parent2::Genotype) -> begin
         genotype_length = length(parent1)
         points = StatsBase.sample(1:(genotype_length - 1), point_count, replace=false, ordered=true)
 
@@ -12,7 +12,7 @@ function multipoint(point_count)
     end
 end
 
-function multipoint_core_operation(parent1, parent2, points)
+function multipoint_core_operation(parent1::Genotype, parent2::Genotype, points::Vector{Int})
     child = zeros(eltype(parent1), length(parent1))
     take_seconds_genes = false
     point_idx = 1
@@ -73,7 +73,7 @@ full_mutation(genotype) = (length(genotype) - 1) .- genotype
 ### SELECTIONS
 
 function β_tournament(β::Int)
-    (reproduction_set, manager::GaManager) -> begin
+    function tournament(reproduction_set::Population, manager::GaManager)
         parameters = manager.iteration_settings.parameters
         to_replace_count = round(UInt32, parameters.population_size * parameters.generational_overlap_ratio)
 
@@ -96,7 +96,7 @@ end
 
 ### MATCHMAKING
 
-random_matchmaking(population) = Random.shuffle(population) |> Consecutive(2) |> collect
+random_matchmaking(population::Population) = Random.shuffle(population) |> Consecutive(2) |> collect
 
 ### end MATCHMAKING
 
@@ -127,7 +127,7 @@ fix_coloring(graph) = coloring -> begin
     fixed_coloring
 end
 
-function most_problematic_vertex(graph, coloring)
+function most_problematic_vertex(graph::Graphs.AbstractGraph, coloring)
     problem_table = Dict{Int, Int}()
 
     for edge in Graphs.edges(graph)

@@ -43,13 +43,13 @@ perform_crossover(parents, settings::GaSettings) =
         MapCat(pair -> settings.operators.crossover(pair[1], pair[2])) |>
         tcollect
 
-function perform_selection!(population, reproduction_set, manager::GaManager)
+function perform_selection!(population::Population, reproduction_set::Population, manager::GaManager)
     newcomers = manager.iteration_settings.operators.selection(reproduction_set, manager)
     Random.shuffle!(population)
     population[1:length(newcomers)] = newcomers
 end
 
-function run_iteration!(population::AbstractVector{Genotype}, manager::GaManager)
+function run_iteration!(population::Population, manager::GaManager)
     parents = manager.iteration_settings.operators.matchmaking(population)
     children = perform_crossover(parents, manager.iteration_settings)
 
@@ -78,7 +78,5 @@ function find_solution(manager::GaManager, population_generator)
 
     get_best(manager.fitness_function, state.population)
 end
-
-get_best = minimum
 
 population_generator(generator) = (count) -> 1:count |> Map(_ -> generator()) |> tcollect
