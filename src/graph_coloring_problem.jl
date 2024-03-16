@@ -40,7 +40,7 @@ function smallest_color(graph, vertex, coloring)
         Map(neighbour -> coloring[neighbour]) |>
         NotA(Nothing) |>
         Unique() |>
-        tcollect
+        collect
 
     sort!(neighbour_colors)
 
