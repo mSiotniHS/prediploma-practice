@@ -65,7 +65,7 @@ end
 #     mutant
 # end
 
-full_mutation(genotype) = (length(genotype) - 1) .- genotype
+full_mutation(genotype::Genotype) = (length(genotype) - 1) .- genotype
 
 ### end MUTATIONS
 
