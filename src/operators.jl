@@ -160,16 +160,16 @@ function report_problem!(problem_table, vertex)
 end
 
 function dict_key_by_max_value(dict)
-    minkey, minvalue = next(dict, start(dict))[1]
+    maxkey, maxvalue = next(dict, start(dict))[1]
 
     for (key, value) in dict
-        if value < minvalue
-            minkey = key
-            minvalue = value
+        if value > maxvalue
+            maxkey = key
+            maxvalue = value
         end
     end
 
-    minkey
+    maxkey
 end
 
 ### end MODIFICATION FRAMEWORK
