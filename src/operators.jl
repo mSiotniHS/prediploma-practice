@@ -39,31 +39,31 @@ end
 
 ### MUTATIONS
 
-function gene_mutation(genotype)
-    genotype_length = length(genotype)
-    mutant = copy(genotype)
+# function gene_mutation(genotype)
+#     genotype_length = length(genotype)
+#     mutant = copy(genotype)
 
-    gene_to_mutate = rand(1:genotype_length)
-    @inbounds mutant[gene_to_mutate] = (genotype_length - 1) - mutant[gene_to_mutate]
+#     gene_to_mutate = rand(1:genotype_length)
+#     @inbounds mutant[gene_to_mutate] = (genotype_length - 1) - mutant[gene_to_mutate]
 
-    mutant
-end
+#     mutant
+# end
 
-function swapping_mutation(genotype)
-    genotype_length = length(genotype)
-    mutant = copy(genotype)
+# function swapping_mutation(genotype)
+#     genotype_length = length(genotype)
+#     mutant = copy(genotype)
 
-    first = rand(1:genotype_length)
-    second = rand(1:(genotype_length - 1))
+#     first = rand(1:genotype_length)
+#     second = rand(1:(genotype_length - 1))
 
-    if second < first
-        @inbounds mutant[first], mutant[second] = mutant[second], mutant[first]
-    else
-        @inbounds mutant[first], mutant[second + 1] = mutant[second + 1], mutant[first]
-    end
+#     if second < first
+#         @inbounds mutant[first], mutant[second] = mutant[second], mutant[first]
+#     else
+#         @inbounds mutant[first], mutant[second + 1] = mutant[second + 1], mutant[first]
+#     end
 
-    mutant
-end
+#     mutant
+# end
 
 full_mutation(genotype) = (length(genotype) - 1) .- genotype
 
