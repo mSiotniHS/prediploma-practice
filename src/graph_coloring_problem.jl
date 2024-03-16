@@ -42,6 +42,10 @@ function smallest_color(graph, vertex, coloring)
         Unique() |>
         collect
 
+    if isempty(neighbour_colors)
+        return 0
+    end
+
     sort!(neighbour_colors)
 
     color = 0
