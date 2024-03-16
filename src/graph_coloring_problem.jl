@@ -38,7 +38,7 @@ function smallest_color(graph, vertex, coloring)
     neighbours = Graphs.neighbors(graph, vertex)
     neighbour_colors = neighbours |>
         Map(neighbour -> coloring[neighbour]) |>
-        Filter(!isnothing) |>
+        NotA(Nothing) |>
         Unique() |>
         tcollect
 
