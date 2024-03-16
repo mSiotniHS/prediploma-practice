@@ -86,4 +86,6 @@ end
 #     ordering
 # end
 
+random_ordering(graph) = Random.shuffle!(tcollect(Graphs.vertices(graph)))
+
 ### end POPULATION GENERATORS
