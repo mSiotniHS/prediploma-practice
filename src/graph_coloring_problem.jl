@@ -38,7 +38,34 @@ end
 
 ### POPULATION GENERATORS
 
-greedy_coloring(ordering_strategy) = (graph) -> begin
+function random_coloring(graph::Graphs.AbstractGraph; rng::Random.AbstractRNG=default_rng())
+    vertices = Graphs.vertices(graph)
+    coloring = SomeColoring(nothing, length(vertices))
+
+    for vertex in vertices
+        coloring[vertex] = any_valid_color(graph, vertex, coloring; rng=rng)
+    end
+
+    coloring
+end
+
+function any_valid_color(graph::Graphs.AbstractGraph, vertex::Vertex, coloring::SomeColoring; rng::Random.AbstractRNG=default_rng())
+    valid_colors = collect(range(SMALLEST_COLOR, length=Graphs.nv(graph)))
+    neighbour_colors = get_non_nothing_colors(Graphs.neighbors(graph, vertex), coloring)
+    setdiff!(valid_colors, neighbour_colors)
+
+    rand(rng, valid_colors)
+end
+
+get_non_nothing_colors(vertices::Vector{Vertex}, coloring::SomeColoring) =
+    vertices |>
+        Map(vertex -> coloring[vertex]) |>
+        NotA(Nothing) |>
+        Unique() |>
+        collect
+
+
+greedy_coloring(ordering_strategy) = (graph::Graphs.AbstractGraph) -> begin
     vertices = ordering_strategy(graph)
     coloring = Vector{Union{Int, Nothing}}(nothing, length(vertices))
 
