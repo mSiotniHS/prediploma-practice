@@ -81,8 +81,11 @@ function run_ga(graph, crossover)
     )
 
     generator() = graph_coloring_method(graph)
+    pg = population_generator(generator)
 
-    find_solution(manager, population_generator(generator))
+    find_solution(manager, pg)
+    # @profview find_solution(manager, pg)
+    # @profview find_solution(manager, pg)
 end
 
 DrWatson._wsave(filename, data::Vector{Population}) = open(filename, "w") do file
