@@ -1,3 +1,14 @@
+### TYPES
+
+const Vertex = Int
+const Color = Int
+const Coloring = Vector{Color}
+const SomeColoring = Vector{Union{Color, Nothing}}
+const SMALLEST_COLOR = 0::Color
+
+### end TYPES
+
+
 ### CRITERIONS
 
 color_count(coloring) = length(unique!(sort(coloring)))
