@@ -5,11 +5,11 @@ include(srcdir("vkr.jl"))
 allparams = Dict(
     :crossover => ["multipoint_2"],
     :graph => Dict(
-        :vertex_count => 25,
-        :ρ => 0.25,
-        :count => collect(1:2)
+        :vertex_count => [200],
+        :ρ => [0.5],
+        :count => collect(1:75)
     ),
-    :run => collect(1:10)
+    :run => collect(1:50)
 )
 
 allparams[:graph] = dict_list(allparams[:graph])
@@ -37,7 +37,7 @@ tournament_3 = β_tournament(3)
 generation_count_evaluator_75 = generation_count_evaluator(75)
 graph_coloring_method = random_coloring
 
-loadgraph(graph_dict) = Graphs.loadgraph(joinpath("data\\graphs\\test", savename(graph_dict, "txt")))
+loadgraph(graph_dict) = Graphs.loadgraph(joinpath("data\\graphs\\vertex_count", savename(graph_dict, "txt")))
 
 function make_ga(dict::Dict)
     @unpack graph, crossover = dict
