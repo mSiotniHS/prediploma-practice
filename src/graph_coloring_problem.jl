@@ -103,7 +103,7 @@ function randomized_lf_ordering(graph::Graphs.AbstractGraph)
     vertices = Graphs.vertices(graph)
     degrees = vertices |> Map(vertex -> Graphs.degree(graph, vertex)) |> tcollect
 
-    ordering = Vector{Int}
+    ordering = Vector{Int}()
 
     while !isempty(vertices)
         idx = roulette_idx(degrees)
