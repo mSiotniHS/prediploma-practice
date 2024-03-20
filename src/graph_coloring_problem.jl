@@ -76,21 +76,20 @@ greedy_coloring(ordering_strategy) = (graph::Graphs.AbstractGraph) -> begin
     coloring
 end
 
-function smallest_color(graph, vertex, coloring)
-    neighbours = Graphs.neighbors(graph, vertex)
-    neighbour_colors = neighbours |>
-        Map(neighbour -> coloring[neighbour]) |>
-        NotA(Nothing) |>
-        Unique() |>
-        collect
+function smallest_color(graph::Graphs.AbstractGraph, vertex::Vertex, coloring::Coloring)
+    smallest_color(Graphs.neighbors(graph, vertex), coloring)
+end
+
+function smallest_color(neighbours::Vector{Vertex}, coloring::Coloring)
+    neighbour_colors = get_non_nothing_colors(neighbours, coloring)
 
     if isempty(neighbour_colors)
-        return 0
+        return SMALLEST_COLOR
     end
 
     sort!(neighbour_colors)
 
-    color = 0
+    color = SMALLEST_COLOR
 
     for i in eachindex(neighbour_colors)
         if color != neighbour_colors[i] break end
