@@ -35,7 +35,7 @@ end
 multipoint_2 = multipoint(2)
 tournament_3 = β_tournament(3)
 generation_count_evaluator_75 = generation_count_evaluator(75)
-graph_coloring_method = greedy_coloring(random_ordering)
+graph_coloring_method = random_coloring
 
 loadgraph(graph_dict) = Graphs.loadgraph(joinpath("data\\graphs\\test", savename(graph_dict, "txt")))
 
