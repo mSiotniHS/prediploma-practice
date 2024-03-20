@@ -36,7 +36,7 @@ end
 
 spx = multipoint(1)
 
-function shuffle(parent1::Genotype, parent2::Genotype; rng::AbstractRNG=default_rng())
+function shuffle(parent1::Genotype, parent2::Genotype; rng::Random.AbstractRNG=default_rng())
     permutation = randperm(rng, length(parent1))
     tmp1, tmp2 = spx(view(parent1, permutation), view(parent2, permutation))
 
@@ -49,7 +49,7 @@ function shuffle(parent1::Genotype, parent2::Genotype; rng::AbstractRNG=default_
     child1, child2
 end
 
-function uniform(parent1::Genotype, parent2::Genotype; rng::AbstractRNG=default_rng())
+function uniform(parent1::Genotype, parent2::Genotype; rng::Random.AbstractRNG=default_rng())
     child1, child2 = copy(parent1), copy(parent2)
     choice_table = rand(rng, Bool, length(parent1))
 
