@@ -99,7 +99,7 @@ function smallest_color(neighbours::Vector{Vertex}, coloring::Coloring)
     color
 end
 
-function randomized_lf_ordering(graph)
+function randomized_lf_ordering(graph::Graphs.AbstractGraph)
     vertices = Graphs.vertices(graph)
     degrees = vertices |> Map(vertex -> Graphs.degree(graph, vertex)) |> tcollect
 
@@ -136,6 +136,6 @@ end
 #     ordering
 # end
 
-random_ordering(graph) = Random.shuffle!(tcollect(Graphs.vertices(graph)))
+random_ordering(graph::Graphs.AbstractGraph) = Random.shuffle!(tcollect(Graphs.vertices(graph)))
 
 ### end POPULATION GENERATORS
