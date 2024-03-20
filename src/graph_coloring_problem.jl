@@ -16,17 +16,21 @@ color_count(coloring) = length(unique!(sort(coloring)))
 function color_count_with_penalty(graph::Graphs.AbstractGraph; weight = 1) 
     edges = Graphs.edges(graph)
 
-    (coloring::Vector{Int64}) -> begin
-        penalty = foldxl(
-            +,
-            edges
-            |> Filter(edge -> coloring[Graphs.src(edge)] == coloring[Graphs.dst(edge)])
-            |> Map(edge -> weight);
-            init = 0
-        )
+    fitness = let e = edges
+        function f(coloring::Coloring)
+            penalty = foldxl(
+                +,
+                e
+                |> Filter(edge -> coloring[Graphs.src(edge)] == coloring[Graphs.dst(edge)])
+                |> Map(edge -> weight);
+                init = 0
+            )
 
-        color_count(coloring) + penalty
+            color_count(coloring) + penalty
+        end
     end
+
+    fitness
 end
 
 ### end CRITERIONS
