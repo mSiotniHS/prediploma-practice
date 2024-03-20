@@ -75,16 +75,16 @@ end
 function find_solution(manager::GaManager, population_generator)
     state = initialize_manager_state(manager, population_generator)
 
-    to_fitnesses = opcompose(Map(manager.fitness_function), tcollect)
+    # to_fitnesses = opcompose(Map(manager.fitness_function), tcollect)
 
-    history = Vector{Int}[]
-    push!(history, state.population |> to_fitnesses)
+    history = Vector{Population}()
+    push!(history, deepcopy(state.population))
 
     while manager.work_evaluator(state)
         run_iteration!(state.population, manager)
         state.generation_count += 1
 
-        push!(history, state.population |> to_fitnesses)
+        push!(history, deepcopy(state.population))
     end
 
     history
