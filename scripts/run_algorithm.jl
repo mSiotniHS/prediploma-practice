@@ -102,13 +102,17 @@ DrWatson._wsave(filename, data::Vector{Population}) = open(filename, "w") do fil
 end
 
 
-Threads.@threads for i in eachindex(collect(keys(dicts)))
-    flatten = rec_flatten_dict(dicts[i])
-    data_dir = datadir("simulations", savename(flatten, "txt"))
-
-    if !isfile(data_dir)
-        @info "started!"
-        @time history = make_ga(dicts[i])
-        safesave(data_dir, history)
+function main()
+    Threads.@threads for i in eachindex(collect(keys(dicts)))
+        flatten = rec_flatten_dict(dicts[i])
+        data_dir = datadir("simulations/vertex_count", savename(flatten, "txt"))
+    
+        if !isfile(data_dir)
+            @info "started!"
+            @time history = make_ga(dicts[i])
+            safesave(data_dir, history)
+        end
     end
 end
+
+main()
