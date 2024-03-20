@@ -56,6 +56,11 @@ function make_ga(dict::Dict)
 end
 
 function run_ga(graph, crossover)
+    f = color_count_with_penalty(graph; weight=2)
+    @Memoize.memoize function fitness(coloring::Coloring)
+        f(coloring)
+    end
+
     manager = GaManager(
         GaSettings(
             IterationOperators(
@@ -71,7 +76,7 @@ function run_ga(graph, crossover)
                 0.5
             )
         ),
-        color_count_with_penalty(graph; weight=2),
+        fitness,
         generation_count_evaluator_75
     )
 
