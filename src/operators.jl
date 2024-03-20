@@ -154,23 +154,27 @@ function fix_coloring(graph::Graphs.AbstractGraph)
     coloring -> fixer!(copy(coloring))
 end
 
-fix_coloring!(graph::Graphs.AbstractGraph) = coloring -> begin
-    while true
-        problematic_vertex = most_problematic_vertex(graph, coloring)
-        if isnothing(problematic_vertex)
-            break
+function fix_coloring!(graph::Graphs.AbstractGraph) 
+    edges = Graphs.edges(graph)
+
+    function tmp(coloring)
+        while true
+            problematic_vertex = most_problematic_vertex(edges, coloring)
+            if isnothing(problematic_vertex)
+                break
+            end
+
+            coloring[problematic_vertex] = smallest_color(graph, problematic_vertex, coloring)
         end
 
-        coloring[problematic_vertex] = smallest_color(graph, problematic_vertex, coloring)
+        coloring
     end
-
-    coloring
 end
 
-function most_problematic_vertex(graph::Graphs.AbstractGraph, coloring)
+function most_problematic_vertex(graph_edges, coloring)
     problem_table = Dict{Int, Int}()
 
-    for edge in Graphs.edges(graph)
+    for edge in graph_edges
         vertex1 = Graphs.src(edge)
         vertex2 = Graphs.dst(edge)
 
