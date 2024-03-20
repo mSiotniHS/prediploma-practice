@@ -11,7 +11,7 @@ const SMALLEST_COLOR = 0::Color
 
 ### CRITERIONS
 
-color_count(coloring) = length(unique!(sort(coloring)))
+color_count(coloring::Coloring) = length(unique!(sort(coloring)))
 
 function color_count_with_penalty(graph::Graphs.AbstractGraph; weight = 1) 
     edges = Graphs.edges(graph)
