@@ -85,12 +85,20 @@ function run_ga(graph, crossover)
     find_solution(manager, population_generator(generator))
 end
 
-DrWatson._wsave(filename, data::Vector{Vector{Int}}) = open(filename, "w") do file
+DrWatson._wsave(filename, data::Vector{Population}) = open(filename, "w") do file
+    run_info = Dict{Symbol, Any}()
+    run_info[:history] = Vector{Dict{Symbol, Any}}()
+
     for i in eachindex(data)
-        iteration_fitnesses = data[i]
-        write(file, join(iteration_fitnesses |> Map(string), ","))
-        write(file, "\n")
+        population = data[i]
+        iteration_info = Dict(
+            :generation_no => i,
+            :population => population
+        )
+        push!(run_info[:history], iteration_info)
     end
+
+    JSON.print(file, run_info)
 end
 
 
