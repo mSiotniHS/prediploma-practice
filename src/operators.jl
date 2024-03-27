@@ -49,17 +49,14 @@ function shuffle(parent1::Genotype, parent2::Genotype; rng::Random.AbstractRNG=d
     child1, child2
 end
 
-function uniform(parent1::Genotype, parent2::Genotype; rng::Random.AbstractRNG=default_rng())
-    child1, child2 = copy(parent1), copy(parent2)
-    choice_table = rand(rng, Bool, length(parent1))
+function uniform(p1::Genotype, p2::Genotype)
+    i = rand(Bool, length(p1))
+    j = .!i
 
-    for i in 1:genotype_length
-        if choice_table[i]
-            vswap!(child1, child2, i)
-        end
-    end
+    c1 = p1 .* i .+ p2 .* j
+    c2 = p1 .* j .+ p2 .* i
 
-    child1, child2
+    c1, c2
 end
 
 ### end CROSSOVERS
