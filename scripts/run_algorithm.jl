@@ -88,20 +88,33 @@ function run_ga(graph, crossover)
     # @profview find_solution(manager, pg)
 end
 
-DrWatson._wsave(filename, data::Vector{Population}) = open(filename, "w") do file
+DrWatson._wsave(filename, data::Tuple{Vector{Vector{Int}}, Vector{Population}}) = open(filename, "w") do file
     run_info = Dict{Symbol, Any}()
     run_info[:history] = Vector{Dict{Symbol, Any}}()
 
-    for i in eachindex(data)
-        population = data[i]
-        iteration_info = Dict(
-            :generation_no => i,
-            :population => population
-        )
-        push!(run_info[:history], iteration_info)
+    fitnesses, population_25ths = data
+
+    write(file, "NEW\n")
+
+    for i in eachindex(fitnesses)
+        iteration_fitnesses = fitnesses[i]
+        write(file, join(iteration_fitnesses |> Map(string), ","))
+        write(file, "\n")
     end
 
-    JSON.print(file, run_info)
+    write(file, "---\n")
+
+    for i in eachindex(population_25ths)
+        population = population_25ths[i]
+
+        for j in eachindex(population)
+            genotype = population[j]
+            write(file, join(genotype |> Map(string), ","))
+            write(file, "\n")
+        end
+
+        write(file, "-\n")
+    end
 end
 
 
@@ -112,8 +125,8 @@ function main()
     
         if !isfile(data_dir)
             @info "started!"
-            @time history = make_ga(dicts[i])
-            safesave(data_dir, history)
+            @time result = make_ga(dicts[i])
+            safesave(data_dir, result)
         end
     end
 end
