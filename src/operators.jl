@@ -36,8 +36,8 @@ end
 
 spx = multipoint(1)
 
-function shuffle(parent1::Genotype, parent2::Genotype; rng::Random.AbstractRNG=default_rng())
-    permutation = randperm(rng, length(parent1))
+function shuffle(parent1::Genotype, parent2::Genotype)
+    permutation = Random.randperm(length(parent1))
     tmp1, tmp2 = spx(view(parent1, permutation), view(parent2, permutation))
 
     child1, child2 = similar(tmp1), similar(tmp2)
