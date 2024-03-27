@@ -1,7 +1,7 @@
 ### CROSSOVERS
 
 function multipoint(point_count::Int)
-    (parent1::Genotype, parent2::Genotype) -> begin
+    (parent1::AbstractVector{Int}, parent2::AbstractVector{Int}) -> begin
         genotype_length = length(parent1)
         points = StatsBase.sample(1:(genotype_length - 1), point_count, replace=false, ordered=true)
 
@@ -12,7 +12,7 @@ function multipoint(point_count::Int)
     end
 end
 
-function multipoint_core_operation(parent1::Genotype, parent2::Genotype, points::Vector{Int})
+function multipoint_core_operation(parent1::AbstractVector{Int}, parent2::AbstractVector{Int}, points::Vector{Int})
     child = similar(parent1)
     take_seconds_genes = false
     point_idx = 1
