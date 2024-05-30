@@ -1,4 +1,4 @@
-### CROSSOVERS
+#region CROSSOVERS
 
 function multipoint(point_count::Int)
     (parent1::AbstractVector{Int}, parent2::AbstractVector{Int}) -> begin
@@ -59,10 +59,10 @@ function uniform(p1::Genotype, p2::Genotype)
     c1, c2
 end
 
-### end CROSSOVERS
+#endregion
 
 
-### MUTATIONS
+#region MUTATIONS
 
 # function gene_mutation(genotype)
 #     genotype_length = length(genotype)
@@ -92,10 +92,10 @@ end
 
 full_mutation(genotype::Genotype) = (length(genotype) - 1) .- genotype
 
-### end MUTATIONS
+#endregion
 
 
-### SELECTIONS
+#region SELECTIONS
 
 function β_tournament(β::Int)
     function tournament(reproduction_set::Population, manager::GaManager)
@@ -125,53 +125,93 @@ function run_tournament!(reproduction_set::Population, newcomers::Population, co
     deleteat!(reproduction_set, winner_idx)
 end
 
-### end SELECTIONS
+#endregion
 
 
-### MATCHMAKING
+#region MATCHMAKING
 
 random_matchmaking(population::Population) = Random.shuffle(population) |> Consecutive(2) |> collect
 
-### end MATCHMAKING
+#endregion
 
 
-### WORK EVALUATORS
+#region WORK EVALUATORS
 
 generation_count_evaluator(max_count::Int) = (state::GaManagerState) -> state.generation_count < max_count
 
-### end WORK EVALUATORS
+function no_progress_evaluator(max_no_progress_count::Int, fitness_func)
+    last_best_fitness = typemax(Int)
+    no_progress_count = 0
+
+    return function f(state::GaManagerState)
+        best_fitness = minimum(fitness_func, state.population)
+
+        if best_fitness < last_best_fitness
+            last_best_fitness = best_fitness
+            no_progress_count = 0
+            return true
+        end
+
+        no_progress_count += 1
+        return no_progress_count < max_no_progress_count
+    end
+end
+
+function every_nth_check_evaluator(check_iteration::Int, fitness_func)
+    last_best_fitness = typemax(Int)
+    iterations_from_last_check = 0
+
+    return function f(state::GaManagerState)
+        if iterations_from_last_check < check_iteration
+            iterations_from_last_check += 1
+            return true
+        end
+
+        best_fitness = minimum(fitness_func, state.population)
+        if best_fitness < last_best_fitness
+            last_best_fitness = best_fitness
+            iterations_from_last_check = 1
+            return true
+        end
+
+        return false
+    end
+end
+
+#endregion
 
 
 ### MODIFICATION FRAMEWORK
 
-modified_operator(modifier, operator) = modifier ∘ operator
-
 function fix_coloring(graph::Graphs.AbstractGraph)
     fixer! = fix_coloring!(graph)
-    coloring -> fixer!(copy(coloring))
+    return coloring -> fixer!(copy(coloring))
 end
 
 function fix_coloring!(graph::Graphs.AbstractGraph) 
-    edges = Graphs.edges(graph)
+    edges = collect(Graphs.edges(graph))
 
-    function tmp(coloring)
+    return function tmp(coloring)
         while true
             problematic_vertex = most_problematic_vertex(edges, coloring)
             if isnothing(problematic_vertex)
                 break
             end
 
+            @info "There is still a problematic vertex"
+
             coloring[problematic_vertex] = smallest_color(graph, problematic_vertex, coloring)
         end
 
-        coloring
+        return coloring
     end
 end
 
 function most_problematic_vertex(graph_edges, coloring)
     problem_table = Dict{Int, Int}()
 
-    for edge in graph_edges
+    for i in eachindex(graph_edges)
+        edge = graph_edges[i]
         vertex1 = Graphs.src(edge)
         vertex2 = Graphs.dst(edge)
 
@@ -181,12 +221,18 @@ function most_problematic_vertex(graph_edges, coloring)
         end
     end
 
-    problematic_vertex = dict_key_by_max_value(problem_table)
-    if problem_table[problematic_vertex] == 0
-        nothing
+    @info "Current problems"  problem_table
+
+    if isempty(problem_table)
+        return nothing
     end
 
-    problematic_vertex
+    problematic_vertex = dict_key_by_max_value(problem_table)
+    if problem_table[problematic_vertex] == 0
+        return nothing
+    end
+
+    return problematic_vertex
 end
 
 function report_problem!(problem_table, vertex)
@@ -197,17 +243,6 @@ function report_problem!(problem_table, vertex)
     problem_table[vertex] += 1
 end
 
-function dict_key_by_max_value(dict)
-    maxkey, maxvalue = next(dict, start(dict))[1]
-
-    for (key, value) in dict
-        if value > maxvalue
-            maxkey = key
-            maxvalue = value
-        end
-    end
-
-    maxkey
-end
+dict_key_by_max_value(d) = collect(keys(d))[argmax(collect(values(d)))]
 
 ### end MODIFICATION FRAMEWORK
