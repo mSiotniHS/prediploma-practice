@@ -61,35 +61,6 @@ end
 
 #endregion
 
-
-#region MUTATIONS
-
-# function gene_mutation(genotype)
-#     genotype_length = length(genotype)
-#     mutant = copy(genotype)
-
-#     gene_to_mutate = rand(1:genotype_length)
-#     @inbounds mutant[gene_to_mutate] = (genotype_length - 1) - mutant[gene_to_mutate]
-
-#     mutant
-# end
-
-# function swapping_mutation(genotype)
-#     genotype_length = length(genotype)
-#     mutant = copy(genotype)
-
-#     first = rand(1:genotype_length)
-#     second = rand(1:(genotype_length - 1))
-
-#     if second < first
-#         @inbounds mutant[first], mutant[second] = mutant[second], mutant[first]
-#     else
-#         @inbounds mutant[first], mutant[second + 1] = mutant[second + 1], mutant[first]
-#     end
-
-#     mutant
-# end
-
 full_mutation(genotype::Genotype) = (length(genotype) - 1) .- genotype
 
 #endregion
@@ -138,24 +109,6 @@ random_matchmaking(population::Population) = Random.shuffle(population) |> Conse
 #region WORK EVALUATORS
 
 generation_count_evaluator(max_count::Int) = (state::GaManagerState) -> state.generation_count < max_count
-
-function no_progress_evaluator(max_no_progress_count::Int, fitness_func)
-    last_best_fitness = typemax(Int)
-    no_progress_count = 0
-
-    return function f(state::GaManagerState)
-        best_fitness = minimum(fitness_func, state.population)
-
-        if best_fitness < last_best_fitness
-            last_best_fitness = best_fitness
-            no_progress_count = 0
-            return true
-        end
-
-        no_progress_count += 1
-        return no_progress_count < max_no_progress_count
-    end
-end
 
 function every_nth_check_evaluator(check_iteration::Int, fitness_func)
     last_best_fitness = typemax(Int)
