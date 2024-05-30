@@ -37,7 +37,7 @@ mutate(children::Population, settings::GaSettings) =
         Map(settings.operators.mutation) |>
         tcollect
 
-perform_crossover(parents, settings::GaSettings) =
+perform_crossover(parents::Vector{Tuple{Genotype, Genotype}}, settings::GaSettings) =
     parents |>
         Filter(_ -> rand() < settings.parameters.crossover_rate) |>
         MapCat(pair -> settings.operators.crossover(pair[1], pair[2])) |>
@@ -77,21 +77,12 @@ function find_solution(manager::GaManager, population_generator)
 
     to_fitnesses = opcompose(Map(manager.fitness_function), tcollect)
 
-    fitnesses = Vector{Vector{Int}}()
-    population_25ths = Vector{Population}()
-    push!(fitnesses, state.population |> to_fitnesses)
-
     while manager.work_evaluator(state)
         run_iteration!(state.population, manager)
         state.generation_count += 1
-
-        push!(fitnesses, state.population |> to_fitnesses)
-        if state.generation_count % 25 == 0
-            push!(population_25ths, deepcopy(state.population))
-        end
     end
 
-    fitnesses, population_25ths
+    state.population, state.population |> to_fitnesses, state.generation_count
 end
 
 population_generator(generator) = (count) -> 1:count |> Map(_ -> generator()) |> tcollect
